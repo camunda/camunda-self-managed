@@ -32,4 +32,4 @@ jobs:
         uses: ./.github/actions/aws_marketplace_ecr_mirror
         with:
           from: camunda/zeebe:${{ inputs.imageTag }}
-          to: $MARKETPLACE_BASE_URL/camunda/camunda8/zeebe:${{ inputs.imageTag }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/zeebe:${{ inputs.imageTag }}

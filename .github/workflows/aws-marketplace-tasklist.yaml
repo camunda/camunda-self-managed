@@ -32,4 +32,4 @@ jobs:
         uses: ./.github/actions/aws_marketplace_ecr_mirror
         with:
           from: camunda/tasklist:${{ inputs.imageTag }}
-          to: $MARKETPLACE_BASE_URL/camunda/camunda8/tasklist:${{ inputs.imageTag }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/tasklist:${{ inputs.imageTag }}

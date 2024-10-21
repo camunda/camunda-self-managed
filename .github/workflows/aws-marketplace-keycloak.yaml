@@ -32,5 +32,5 @@ jobs:
         uses: ./.github/actions/aws_marketplace_ecr_mirror
         with:
           from: bitnami/keycloak:${{ inputs.imageTag }}
-          to: $MARKETPLACE_BASE_URL/camunda/camunda8/keycloak:${{ inputs.imageTag }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/keycloak:${{ inputs.imageTag }}
 
