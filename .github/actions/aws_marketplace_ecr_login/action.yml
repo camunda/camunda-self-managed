@@ -4,8 +4,6 @@ inputs:
     default: "arn:aws:iam::ACCOUNTID:role/GitHubAction-AssumeRoleWithAction"
   aws-region:
     default: "us-east-1"
-  marketplace-base-url:
-    default: "709825985650.dkr.ecr.us-east-1.amazonaws.com"
 runs:
   using: "composite"
   steps:
@@ -14,5 +12,5 @@ runs:
         role-to-assume: ${{ inputs.aws-role-arn }}
         aws-region: ${{ inputs.aws-region }}
     - run: |
-        aws ecr get-login-password --region ${{ inputs.aws-region }} | docker login --username AWS --password-stdin ${{ inputs.marketplace-base-url }}/camunda
+        aws ecr get-login-password --region ${{ inputs.aws-region }} | docker login --username AWS --password-stdin $MARKETPLACE_BASE_URL/camunda
       shell: bash

@@ -14,9 +14,6 @@ on:
     paths:
       - '.github/workflows/aws-marketplace-postgresql.yaml'
 
-env:
-  MARKETPLACE_BASE_URL: "709825985650.dkr.ecr.us-east-1.amazonaws.com"
-
 jobs:
   build:
     permissions:
@@ -30,8 +27,6 @@ jobs:
         with:
           aws-role-arn: "arn:aws:iam::${{ secrets.DISTRO_CI_AWS_MPLACE_AWS_ACCOUNT_ID }}:role/GitHubAction-AssumeRoleWithAction"
           aws-region: "us-east-1"
-          marketplace-base-url: "709825985650.dkr.ecr.us-east-1.amazonaws.com"
-
 
       - name: web modeler restapi
         uses: ./.github/actions/aws_marketplace_ecr_mirror
