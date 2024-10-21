@@ -28,18 +28,8 @@ jobs:
           aws-role-arn: "arn:aws:iam::${{ secrets.DISTRO_CI_AWS_MPLACE_AWS_ACCOUNT_ID }}:role/GitHubAction-AssumeRoleWithAction"
           aws-region: "us-east-1"
 
-      - name: Pull tasklist
-        run: docker pull camunda/tasklist:$IMAGE_TAG
-        env:
-          IMAGE_TAG: ${{ inputs.imageTag }}
-
-      - name: Tag tasklist
-        run: docker tag camunda/tasklist:$IMAGE_TAG $MARKETPLACE_BASE_URL/camunda/camunda8/tasklist:$IMAGE_TAG
-        env:
-          IMAGE_TAG: ${{ inputs.imageTag }}
-
-      - name: Push the tasklist image
-        run: docker push $MARKETPLACE_BASE_URL/camunda/camunda8/tasklist:$IMAGE_TAG
-        env:
-          IMAGE_TAG: ${{ inputs.imageTag }}
-
+      - name: mirror tasklist
+        uses: ./.github/actions/aws_marketplace_ecr_mirror
+        with:
+          from: camunda/tasklist:${{ inputs.imageTag }}
+          to: $MARKETPLACE_BASE_URL/camunda/camunda8/tasklist:${{ inputs.imageTag }}

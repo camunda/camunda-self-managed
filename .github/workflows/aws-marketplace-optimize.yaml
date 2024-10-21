@@ -28,17 +28,8 @@ jobs:
           aws-role-arn: "arn:aws:iam::${{ secrets.DISTRO_CI_AWS_MPLACE_AWS_ACCOUNT_ID }}:role/GitHubAction-AssumeRoleWithAction"
           aws-region: "us-east-1"
           
-      - name: Pull the docker image
-        run: docker pull camunda/optimize:$IMAGE_TAG
-        env:
-          IMAGE_TAG: ${{ inputs.imageTag }}
-
-      - name: Tag the docker image
-        run: docker tag camunda/optimize:$IMAGE_TAG $MARKETPLACE_BASE_URL/camunda/camunda8/optimize:$IMAGE_TAG
-        env:
-          IMAGE_TAG: ${{ inputs.imageTag }}
-
-      - name: Push the docker image
-        run: docker push $MARKETPLACE_BASE_URL/camunda/camunda8/optimize:$IMAGE_TAG
-        env:
-          IMAGE_TAG: ${{ inputs.imageTag }}
+      - name: mirror optimize
+        uses: ./.github/actions/aws_marketplace_ecr_mirror
+        with:
+          from: camunda/optimize:${{ inputs.imageTag }}
+          to: $MARKETPLACE_BASE_URL/camunda/camunda8/optimize:${{ inputs.imageTag }}

@@ -28,18 +28,8 @@ jobs:
           aws-role-arn: "arn:aws:iam::${{ secrets.DISTRO_CI_AWS_MPLACE_AWS_ACCOUNT_ID }}:role/GitHubAction-AssumeRoleWithAction"
           aws-region: "us-east-1"
 
-      - name: Pull operate
-        run: docker pull camunda/operate:$IMAGE_TAG
-        env:
-          IMAGE_TAG: ${{ inputs.imageTag }}
-
-      - name: Tag operate
-        run: docker tag camunda/operate:$IMAGE_TAG $MARKETPLACE_BASE_URL/camunda/camunda8/operate:$IMAGE_TAG
-        env:
-          IMAGE_TAG: ${{ inputs.imageTag }}
-
-      - name: Push the operate image
-        run: docker push $MARKETPLACE_BASE_URL/camunda/camunda8/operate:$IMAGE_TAG
-        env:
-          IMAGE_TAG: ${{ inputs.imageTag }}
-
+      - name: mirror operate
+        uses: ./.github/actions/aws_marketplace_ecr_mirror
+        with:
+          from: camunda/operate:${{ inputs.imageTag }}
+          to: $MARKETPLACE_BASE_URL/camunda/camunda8/operate:${{ inputs.imageTag }}

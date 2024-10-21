@@ -33,4 +33,3 @@ jobs:
         with:
           from: bitnami/elasticsearch:${{ inputs.imageTag }}
           to: $MARKETPLACE_BASE_URL/camunda/camunda8/elasticsearch:${{ inputs.imageTag }}
-

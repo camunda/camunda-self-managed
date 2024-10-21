@@ -33,4 +33,3 @@ jobs:
         with:
           from: bitnami/postgresql:${{ inputs.imageTag }}
           to: $MARKETPLACE_BASE_URL/camunda/camunda8/postgresql:${{ inputs.imageTag }}
-
