@@ -39,19 +39,19 @@ jobs:
           CAMUNDA_REGISTRY_PASSWORD: ${{ secrets.CAMUNDA_REGISTRY_PASSWORD }}
      
       - name: web modeler restapi
-        uses: ./.github/actions/mirror
+        uses: ./.github/actions/aws_marketplace_ecr_mirror
         with:
           from: registry.camunda.cloud/web-modeler-ee/modeler-restapi:${{ inputs.imageTag }}
           to: $MARKETPLACE_BASE_URL/camunda/camunda8/modeler-restapi:${{ inputs.imageTag }}
 
       - name: web modeler webapp
-        uses: ./.github/actions/mirror
+        uses: ./.github/actions/aws_marketplace_ecr_mirror
         with:
           from: registry.camunda.cloud/web-modeler-ee/modeler-webapp:${{ inputs.imageTag }}
           to: $MARKETPLACE_BASE_URL/camunda/camunda8/modeler-webapp:${{ inputs.imageTag }}
 
       - name: web modeler websockets
-        uses: ./.github/actions/mirror
+        uses: ./.github/actions/aws_marketplace_ecr_mirror
         with:
           from: registry.camunda.cloud/web-modeler-ee/modeler-websockets:${{ inputs.imageTag }}
           to: $MARKETPLACE_BASE_URL/camunda/camunda8/modeler-websockets:${{ inputs.imageTag }}

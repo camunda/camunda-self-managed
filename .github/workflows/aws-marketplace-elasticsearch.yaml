@@ -33,7 +33,7 @@ jobs:
 
 
       - name: mirror elasticsearch image
-        uses: ./.github/actions/mirror
+        uses: ./.github/actions/aws_marketplace_ecr_mirror
         with:
           from: bitnami/elasticsearch:${{ inputs.imageTag }}
           to: $MARKETPLACE_BASE_URL/camunda/camunda8/elasticsearch:${{ inputs.imageTag }}

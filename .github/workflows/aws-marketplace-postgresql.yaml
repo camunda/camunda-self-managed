@@ -34,7 +34,7 @@ jobs:
 
 
       - name: web modeler restapi
-        uses: ./.github/actions/mirror
+        uses: ./.github/actions/aws_marketplace_ecr_mirror
         with:
           from: bitnami/postgresql:${{ inputs.imageTag }}
           to: $MARKETPLACE_BASE_URL/camunda/camunda8/postgresql:${{ inputs.imageTag }}
