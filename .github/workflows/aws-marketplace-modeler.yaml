@@ -55,9 +55,3 @@ jobs:
         with:
           from: registry.camunda.cloud/web-modeler-ee/modeler-websockets:${{ inputs.imageTag }}
           to: $MARKETPLACE_BASE_URL/camunda/camunda8/modeler-websockets:${{ inputs.imageTag }}
-
-
-
-     
-
-
