@@ -1,9 +1,11 @@
 name: 'AWS Marketplace | ECR Image Mirror'
 inputs:
   from:
-    default: "camunda/zeebe:8.2.7"
+    description: "The name and version of the docker image. For example: camunda/zeebe:8.2.7"
+    type: string
   to:
-    default: "709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/zeebe:8.2.7"
+    description: "The name and version of the destination to push the image to. For example: 709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/zeebe:8.2.7"
+    type: string
 runs:
   using: "composite"
   steps:
