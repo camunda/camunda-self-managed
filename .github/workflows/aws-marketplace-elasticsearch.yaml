@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: ./.github/actions/login_to_aws
+      - uses: ./.github/actions/aws_marketplace_ecr_login
         with:
           aws-role-arn: "arn:aws:iam::${{ secrets.DISTRO_CI_AWS_MPLACE_AWS_ACCOUNT_ID }}:role/GitHubAction-AssumeRoleWithAction"
           aws-region: "us-east-1"

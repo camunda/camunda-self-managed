@@ -1,4 +1,4 @@
-name: 'login_to_aws'
+name: 'AWS Marketplace | AWS ECR Login'
 inputs:
   aws-role-arn:
     default: "arn:aws:iam::ACCOUNTID:role/GitHubAction-AssumeRoleWithAction"
