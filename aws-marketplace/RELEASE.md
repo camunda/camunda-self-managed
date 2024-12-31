@@ -111,7 +111,7 @@ No changes
 709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/modeler-webapp:8.3.1
 709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/modeler-websockets:8.3.1
 709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/elasticsearch:8.8.2
-709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/licensemanager:0.0.1
+709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/license-manager:0.0.1
 ```
 
 ### Delivery option title:

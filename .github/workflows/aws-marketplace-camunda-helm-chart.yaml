@@ -46,8 +46,8 @@ jobs:
       - name: remove old tar
         run: rm -rf camunda-platform-*.tgz
 
-      - name: copy licensemanager into templates
-        run: cp aws-marketplace/licensemanager/chart_preinstall_hook.yaml camunda-platform/templates/
+      - name: copy license-manager into templates
+        run: cp aws-marketplace/license-manager/chart_preinstall_hook.yaml camunda-platform/templates/
 
       - name: replace chart version
         run: 'sed -i "s/^version: .*/version: $IMAGE_TAG/" camunda-platform/Chart.yaml'

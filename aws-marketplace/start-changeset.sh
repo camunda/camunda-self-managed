@@ -83,7 +83,7 @@ cat > changeset << EOF
                   "709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/modeler-webapp:${MODELER_VERSION}",
                   "709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/modeler-websockets:${MODELER_VERSION}",
                   "709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/elasticsearch:${ELASTICSEARCH_VERSION}",
-                  "709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/licensemanager:${LICENSEMANAGER_VERSION}"
+                  "709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/license-manager:${LICENSEMANAGER_VERSION}"
                 ],
                 "HelmChartUri": "709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/camunda-platform:${CHART_VERSION}",
                 "Description": "Camunda provides visibility into and control over business processes that span multiple microservices.",

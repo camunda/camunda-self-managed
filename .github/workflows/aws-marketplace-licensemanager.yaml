@@ -1,10 +1,10 @@
-name: "AWS Marketplace | Build: licensemanager"
+name: "AWS Marketplace | Build: license-manager"
 
 on:
   workflow_dispatch:
     inputs:
       imageTag:
-        description: "The image tag for licensemanager"
+        description: "The image tag for license-manager"
         required: true
         default: 0.0.1
 
@@ -23,11 +23,11 @@ jobs:
           aws-region: "us-east-1"
 
       - name: Build the docker image
-        run: docker build -f aws-marketplace/licensemanager/Dockerfile -t $MARKETPLACE_BASE_URL/camunda/camunda8/licensemanager:$IMAGE_TAG licensemanager
+        run: docker build -f aws-marketplace/license-manager/Dockerfile -t $MARKETPLACE_BASE_URL/camunda/camunda8/license-manager:$IMAGE_TAG license-manager
         env:
           IMAGE_TAG: ${{ inputs.imageTag }}
 
       - name: Push the docker image
-        run: docker push $MARKETPLACE_BASE_URL/camunda/camunda8/licensemanager:$IMAGE_TAG
+        run: docker push $MARKETPLACE_BASE_URL/camunda/camunda8/license-manager:$IMAGE_TAG
         env:
           IMAGE_TAG: ${{ inputs.imageTag }}

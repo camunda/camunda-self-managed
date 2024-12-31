@@ -9,7 +9,7 @@ The intended folder structure was to have a folder per application component, wi
 
 There were a few unintended uses for this repository as I learned more about the AWS Marketplace. Those uses are:
 
-* licensemanager - holds scripts / manifests related to the AWS License Manager.
+* license-manager - holds scripts / manifests related to the AWS License Manager.
 * firstuser-password.yaml - This manifest will create a first user and assign a random password. This is a requirement for being on the AWS Marketplace.
 
 
@@ -23,7 +23,7 @@ The AWS License Manager is what determines whether a customer has actually purch
 
 ### Our LicenseManager
 
-The script `checkoutLicense.py` in the licensemanager folder will simply check out a license using the api. This is mostly a copy of AWS's default script they recommend in the AWS Marketplace Sellers Guide.
+The script `checkoutLicense.py` in the license-manager folder will simply check out a license using the api. This is mostly a copy of AWS's default script they recommend in the AWS Marketplace Sellers Guide.
 
 `requirements.txt` is a standard python file that lists dependencies for the `checkoutLicense.py` program.
 
