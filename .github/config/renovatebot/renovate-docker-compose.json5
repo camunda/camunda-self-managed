@@ -1,0 +1,86 @@
+{
+  description: "Keeps Docker Compose up to date",
+  packageRules: [
+    // Disable Minor and Major updates by default.
+    {
+      enabled: false,
+      matchFileNames: ["docker-compose/versions/camunda-8*/**"],
+      matchUpdateTypes: ["minor", "major"],
+    },
+    // Disable unsupported Camunda versions.
+    {
+      enabled: false,
+      matchFileNames: [
+        "docker-compose/versions/camunda-8.0/**",
+        "docker-compose/versions/camunda-8.1/**",
+        "docker-compose/versions/camunda-8.2/**",
+      ],
+    },
+    //
+    // Main groups.
+    // This section should be updated with the Camunda supported versions.
+    // Start of minor cycle chores.
+    {
+      groupName: "camunda-docker-compose-8.3",
+      addLabels: ["version/8.3", "deps/docker-compose"],
+      matchFileNames: ["docker-compose/versions/camunda-8.3/**"],
+      matchUpdateTypes: ["patch"],
+    },
+    {
+      groupName: "camunda-docker-compose-8.4",
+      addLabels: ["version/8.4", "deps/docker-compose"],
+      matchFileNames: ["docker-compose/versions/camunda-8.4/**"],
+      matchUpdateTypes: ["patch"],
+    },
+    {
+      groupName: "camunda-docker-compose-8.5",
+      addLabels: ["version/8.5", "deps/docker-compose"],
+      matchFileNames: ["docker-compose/versions/camunda-8.5/**"],
+      matchUpdateTypes: ["patch"],
+    },
+    {
+      groupName: "camunda-docker-compose-8.6",
+      addLabels: ["version/8.6", "deps/docker-compose"],
+      matchFileNames: ["docker-compose/versions/camunda-8.6/**"],
+      matchUpdateTypes: ["patch"],
+    },
+    {
+      groupName: "camunda-docker-compose-alpha",
+      addLabels: ["version/8.7", "deps/docker-compose"],
+      matchFileNames: ["docker-compose/versions/camunda-alpha/**"],
+      matchUpdateTypes: ["patch", "minor"],
+    },
+    // End of minor cycle chores.
+
+    // Disable auto-merge for alpha release candidates.
+    {
+      matchNewValue: "/.*alpha[0-9]*-rc[0-9]*/",
+      automerge: false,
+    },
+  ],
+
+  regexManagers: [
+    {
+      // This is mainly used to update Web-Modeler image tag.
+      // section is copied from camunda/camunda-platform-helm
+      fileMatch: [".env"],
+      datasourceTemplate: "docker",
+      matchStrings: [
+        "# renovate: datasource=docker depName=(?<depName>[^\\s]+?)(?: (lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?(?: registryUrl=(?<registryUrl>[^\\s]+?))?\\s*?(\\S+)=(?<currentValue>\\S+)",
+      ],
+      versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
+    },
+    {
+      fileMatch: [
+        ".env",
+        ".keycloak/Dockerfile"
+      ],
+      matchStrings: [
+        "KEYCLOAK_SERVER_VERSION\\s*=\\s*(?<currentValue>\\S+)",
+        "KEYCLOAK_VERSION\\s*=\\s*(?<currentValue>\\S+)",
+      ],
+      depNameTemplate: "bitnami/keycloak",
+      datasourceTemplate: "docker",
+    },
+  ],
+}

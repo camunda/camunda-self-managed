@@ -1,0 +1,25 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
+    "config:recommended",
+    ":automergeDisabled",
+    ":dependencyDashboard",
+    "github>camunda/camunda-self-managed//.github/config/renovatebot/renovate-docker-compose.json5"
+  ],
+  "dependencyDashboard": true,
+  "separateMinorPatch": true,
+  "labels": [
+    "dependencies"
+  ],
+  "patch": {
+    "enabled": true
+  },
+  "hostRules": [
+    {
+      "hostType": "docker",
+      "matchHost": "https://registry.camunda.cloud",
+      "username": "{{ secrets.DISTRO_CAMUNDA_DOCKER_REGISTRY_USERNAME }}",
+      "password": "{{ secrets.DISTRO_CAMUNDA_DOCKER_REGISTRY_PASSWORD }}"
+    }
+  ]
+}
