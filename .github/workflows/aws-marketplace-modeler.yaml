@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: ./.github/actions/aws_marketplace_ecr_login
+      - uses: ./.github/actions/aws-marketplace-ecr-login
         with:
           aws-role-arn: "arn:aws:iam::${{ secrets.DISTRO_CI_AWS_MPLACE_AWS_ACCOUNT_ID }}:role/GitHubAction-AssumeRoleWithAction"
           aws-region: "us-east-1"
@@ -35,19 +35,19 @@ jobs:
           CAMUNDA_REGISTRY_PASSWORD: ${{ secrets.CAMUNDA_REGISTRY_PASSWORD }}
      
       - name: web modeler restapi
-        uses: ./.github/actions/aws_marketplace_ecr_mirror
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
         with:
           from: registry.camunda.cloud/web-modeler-ee/modeler-restapi:${{ inputs.imageTag }}
           to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/modeler-restapi:${{ inputs.imageTag }}
 
       - name: web modeler webapp
-        uses: ./.github/actions/aws_marketplace_ecr_mirror
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
         with:
           from: registry.camunda.cloud/web-modeler-ee/modeler-webapp:${{ inputs.imageTag }}
           to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/modeler-webapp:${{ inputs.imageTag }}
 
       - name: web modeler websockets
-        uses: ./.github/actions/aws_marketplace_ecr_mirror
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
         with:
           from: registry.camunda.cloud/web-modeler-ee/modeler-websockets:${{ inputs.imageTag }}
           to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/modeler-websockets:${{ inputs.imageTag }}
