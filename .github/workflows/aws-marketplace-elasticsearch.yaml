@@ -7,7 +7,7 @@ on:
         description: "The image tag for the elasticsearch image"
         required: true
         # renovate: datasource=docker depName=bitnami/elasticsearch
-        default: 8.15.2
+        default: 8.15.4
   push:
     branches:
       - main
