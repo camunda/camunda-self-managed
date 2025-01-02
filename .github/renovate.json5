@@ -5,7 +5,7 @@
     ":automergeDisabled",
     ":dependencyDashboard",
     "github>camunda/camunda-self-managed//.github/config/renovatebot/renovate-docker-compose.json5",
-    "github>camunda/camunda-distribution//.github/renovate-aws-marketplace.json5"
+    "github>camunda/camunda-self-managed//.github/renovate-aws-marketplace.json5"
   ],
   dependencyDashboard: true,
   labels: ["dependencies"],
