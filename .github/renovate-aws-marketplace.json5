@@ -11,9 +11,6 @@
   "patch": {
     "enabled": true
   },
-  "helm-values": {
-    "fileMatch": ["(^|/).*?values.*?\\.yaml$"]
-  },
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
