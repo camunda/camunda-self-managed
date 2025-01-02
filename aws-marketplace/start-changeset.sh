@@ -37,7 +37,7 @@ export ELASTICSEARCH_VERSION="$(cat chart_images | grep elasticsearch | sed 's/[
 export POSTGRESQL_VERSION="$(cat chart_images | grep postgresql | sed 's/[^:]*://')"
 export KEYCLOAK_VERSION="$(cat chart_images | grep keycloak | sed 's/[^:]*://')"
 export CONSOLE_VERSION="$(cat chart_images | grep console | sed 's/[^:]*://')"
-LICENSEMANAGER_VERSION=0.0.1
+LICENSE_MANAGER_VERSION=0.0.1
 
 
 cat > changeset << EOF
@@ -83,7 +83,7 @@ cat > changeset << EOF
                   "709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/modeler-webapp:${MODELER_VERSION}",
                   "709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/modeler-websockets:${MODELER_VERSION}",
                   "709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/elasticsearch:${ELASTICSEARCH_VERSION}",
-                  "709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/license-manager:${LICENSEMANAGER_VERSION}"
+                  "709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/license-manager:${LICENSE_MANAGER_VERSION}"
                 ],
                 "HelmChartUri": "709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/camunda-platform:${CHART_VERSION}",
                 "Description": "Camunda provides visibility into and control over business processes that span multiple microservices.",

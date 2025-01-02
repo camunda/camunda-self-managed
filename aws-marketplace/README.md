@@ -21,7 +21,7 @@ There were a few unintended uses for this repository as I learned more about the
 The AWS License Manager is what determines whether a customer has actually purchased the product or not. AWS has a backend system that installations will register onto. This registration process is called "Checking out a license" in AWS terminology. Once the application is registered with the aws license manager backend, then our application will then report metrics based on the customer's usage.
 
 
-### Our LicenseManager
+### Our License-Manager
 
 The script `checkoutLicense.py` in the license-manager folder will simply check out a license using the api. This is mostly a copy of AWS's default script they recommend in the AWS Marketplace Sellers Guide.
 
