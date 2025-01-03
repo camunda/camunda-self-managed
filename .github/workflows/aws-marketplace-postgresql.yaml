@@ -7,7 +7,7 @@ on:
         description: "The image tag for the postgresql image"
         required: true
         # renovate: datasource=docker depName=bitnami/postgresql
-        default: 15.8.0
+        default: 17.2.0
   push:
     branches:
       - main
