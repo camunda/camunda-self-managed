@@ -1,0 +1,160 @@
+name: "AWS Marketplace | Mirror: Docker Image"
+
+on:
+  workflow_dispatch:
+    inputs:
+      #
+      # Camunda.
+      camunda-enabled:
+        description: "Publish image component if enabled"
+        type: boolean
+      connectors-enabled:
+        description: "Publish image component if enabled"
+        type: boolean
+      identity-enabled:
+        description: "Publish image component if enabled"
+        type: boolean
+      operate-enabled:
+        description: "Publish image component if enabled"
+        type: boolean
+      optimize-enabled:
+        description: "Publish image component if enabled"
+        type: boolean
+      tasklist-enabled:
+        description: "Publish image component if enabled"
+        type: boolean
+      web-modeler-ee-enabled:
+        description: "Publish image component if enabled"
+        type: boolean
+      web-modeler-enabled:
+        description: "Publish image component if enabled"
+        type: boolean
+      zeebe-enabled:
+        description: "Publish image component if enabled"
+        type: boolean
+
+  push:
+    branches:
+      - aws-marketplace-load-versions-from-file
+    paths:
+      - '.github/workflows/aws-marketplace-camunda-docker-image.yaml'
+      - 'aws-marketplace/versions.env'
+
+jobs:
+  push:
+    name: Push images to AWS Marketplace
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read Versions
+        id: versions
+        uses: sammcj/dotenv-output-action@78d3b46af821c0bc3146381af94e47795c0c17be # v0.5.45
+        with:
+          path: aws-marketplace/versions.env
+          log-variables: true
+          mask-variables: false
+
+      # - uses: ./.github/actions/aws-marketplace-ecr-login
+      #   with:
+      #     aws-role-arn: "arn:aws:iam::${{ secrets.DISTRO_CI_AWS_MPLACE_AWS_ACCOUNT_ID }}:role/GitHubAction-AssumeRoleWithAction"
+      #     aws-region: "us-east-1"
+
+      #
+      # Camunda.
+      - name: Mirror Camunda
+        if: inputs.camunda-enabled
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
+        with:
+          from: camunda/camunda:${{ steps.versions.outputs.camunda }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/camunda:${{ steps.versions.outputs.camunda }}
+
+      - name: Mirror Connectors
+        if: inputs.connectors-enabled
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
+        with:
+          from: camunda/connectors-bundle:${{ steps.versions.outputs.connectors }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/connectors-bundle:${{ steps.versions.outputs.connectors }}
+
+      - name: Mirror Identity
+        if: inputs.identity-enabled
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
+        with:
+          from: camunda/identity:${{ steps.versions.outputs.identity }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/identity:${{ steps.versions.outputs.identity }}
+
+      - name: Mirror Operate
+        if: inputs.operate-enabled
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
+        with:
+          from: camunda/operate:${{ steps.versions.outputs.operate }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/operate:${{ steps.versions.outputs.operate }}
+
+      - name: Mirror Optimize
+        if: inputs.optimize-enabled
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
+        with:
+          from: camunda/optimize:${{ steps.versions.outputs.optimize }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/optimize:${{ steps.versions.outputs.optimize }}
+
+      - name: Mirror Tasklist
+        if: inputs.tasklist-enabled
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
+        with:
+          from: camunda/tasklist:${{ steps.versions.outputs.tasklist }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/tasklist:${{ steps.versions.outputs.tasklist }}
+
+      - name: Mirror Zeebe
+        if: inputs.zeebe
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
+        with:
+          from: camunda/zeebe:${{ steps.versions.outputs.zeebe }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/zeebe:${{ steps.versions.outputs.zeebe }}
+
+      #
+      # Camunda - Web Modeler
+
+      - name: Mirror Web Modeler RestAPI - EE
+        if: inputs.web-modeler-ee-enabled
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
+        with:
+          from: registry.camunda.cloud/web-modeler-ee/modeler-restapi:${{ steps.versions.outputs.web_modeler_ee }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/modeler-restapi:${{ steps.versions.web_modeler_ee }}
+
+      - name: Mirror Web Modeler WebApp - EE
+        if: inputs.web-modeler-ee-enabled
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
+        with:
+          from: registry.camunda.cloud/web-modeler-ee/modeler-webapp:${{ steps.versions.outputs.web_modeler_ee }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/modeler-webapp:${{ steps.versions.outputs.web_modeler_ee }}
+
+      - name: Mirror Web Modeler WebSockets - EE
+        if: inputs.web-modeler-ee-enabled
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
+        with:
+          from: registry.camunda.cloud/web-modeler-ee/modeler-websockets:${{ steps.versions.outputs.web_modeler_ee }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/modeler-websockets:${{ steps.versions.outputs.web_modeler_ee }}
+
+      - name: Mirror Web Modeler RestAPI
+        if: inputs.web-modeler-enabled
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
+        with:
+          from: camunda/web-modeler-restapi:${{ steps.versions.outputs.web_modeler }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/modeler-restapi:${{ steps.versions.outputs.web_modeler }}
+
+      - name: Mirror Web Modeler WebApp
+        if: inputs.web-modeler-enabled
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
+        with:
+          from: camunda/web-modeler-webapp:${{ steps.versions.outputs.web_modeler }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/modeler-webapp:${{ steps.versions.outputs.web_modeler }}
+
+      - name: Mirror Web Modeler WebSockets
+        if: inputs.web-modeler-enabled
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
+        with:
+          from: camunda/web-modeler-websockets:${{ steps.versions.outputs.web_modeler }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/modeler-websockets:${{ steps.versions.outputs.web_modeler }}

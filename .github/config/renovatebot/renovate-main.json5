@@ -1,4 +1,5 @@
 {
+  semanticCommitScope: "misc",
   dependencyDashboard: true,
   "extends": [
     "config:base", "helpers:pinGitHubActionDigests"

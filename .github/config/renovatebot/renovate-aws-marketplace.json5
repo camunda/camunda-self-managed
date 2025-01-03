@@ -4,6 +4,7 @@
   packageRules: [
     {
       matchUpdateTypes: ["minor", "patch", "pin", "digest"],
+      matchFileNames: ["aws-marketplace/**"],
       ignoreTests: true,
     },
   ],
