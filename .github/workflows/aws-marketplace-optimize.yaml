@@ -7,7 +7,7 @@ on:
         description: "The image tag for the optimize image"
         required: true
         # renovate: datasource=docker depName=camunda/optimize
-        default: 8.6.1
+        default: 8.6.3
   push:
     branches:
       - main
