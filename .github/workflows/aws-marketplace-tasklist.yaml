@@ -7,7 +7,7 @@ on:
         description: "The image tag for the Camunda images"
         required: true
         # renovate: datasource=docker depName=camunda/tasklist
-        default: 8.6.3
+        default: 8.6.6
   push:
     branches:
       - main
