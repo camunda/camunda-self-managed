@@ -11,7 +11,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/cache@v4
+    - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
       id: npm-cache
       with:
         path: ~/.npm
@@ -25,7 +25,7 @@ runs:
         echo "Cache hit: ${{ steps.npm-cache.outputs.cache-hit }}"
 
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
       with:
         node-version: 18
 
