@@ -1,0 +1,69 @@
+name: "AWS Marketplace | Mirror: Docker Image - Deps"
+
+on:
+  workflow_dispatch:
+    inputs:
+      #
+      # Non-Camunda.
+      keycloak-enabled:
+        description: "Publish image component if enabled"
+        type: boolean
+      elasticsearch-enabled:
+        description: "Publish image component if enabled"
+        type: boolean
+      postgresql-enabled:
+        description: "Publish image component if enabled"
+        type: boolean
+
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/aws-marketplace-camunda-docker-image-deps.yaml'
+      - 'aws-marketplace/versions.env'
+
+jobs:
+  push:
+    name: Push images to AWS Marketplace
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read Versions
+        id: versions
+        uses: sammcj/dotenv-output-action@78d3b46af821c0bc3146381af94e47795c0c17be # v0.5.45
+        with:
+          path: aws-marketplace/versions.env
+          log-variables: true
+          mask-variables: false
+
+      - uses: ./.github/actions/aws-marketplace-ecr-login
+        with:
+          aws-role-arn: "arn:aws:iam::${{ secrets.DISTRO_CI_AWS_MPLACE_AWS_ACCOUNT_ID }}:role/GitHubAction-AssumeRoleWithAction"
+          aws-region: "us-east-1"
+
+      #
+      # Non-Camunda.
+      - name: Mirror Keycloak
+        if: inputs.keycloak-enabled
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
+        with:
+          from: camunda/keycloak:${{ steps.versions.outputs.keycloak }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/keycloak:${{ steps.versions.outputs.keycloak }}
+
+      - name: Mirror Elasticsearch
+        if: inputs.elasticsearch-enabled
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
+        with:
+          from: camunda/elasticsearch:${{ steps.versions.outputs.elasticsearch }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/elasticsearch:${{ steps.versions.outputs.elasticsearch }}
+
+      - name: Mirror PostgreSQL
+        if: inputs.postgresql-enabled
+        uses: ./.github/actions/aws-marketplace-ecr-mirror
+        with:
+          from: camunda/postgresql:${{ steps.versions.outputs.postgresql }}
+          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/postgresql:${{ steps.versions.outputs.postgresql }}
