@@ -7,7 +7,7 @@ on:
         description: "The image tag for the web-modeler image"
         required: true
         # renovate: datasource=docker depName=camunda/web-modeler lookupName=registry.camunda.cloud/web-modeler-ee/modeler-restapi
-        default: 8.6.2
+        default: 8.6.5
   push:
     branches:
       - main
