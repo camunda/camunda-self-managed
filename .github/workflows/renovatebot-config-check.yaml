@@ -2,13 +2,17 @@ name: Renovatebot | Config Check
 
 on:
   push:
+    branches:
+      - main
     paths:
-    - '.github/renovate.json5'
-    - '.github/config/renovatebot/**'
+      - '.github/workflows/renovatebot-config-check.yaml'
+      - '.github/renovate.json5'
+      - '.github/config/renovatebot/**'
   pull_request:
     paths:
-    - '.github/renovate.json5'
-    - '.github/config/renovatebot/**'
+      - '.github/workflows/renovatebot-config-check.yaml'
+      - '.github/renovate.json5'
+      - '.github/config/renovatebot/**'
   workflow_dispatch: { }
 
 permissions:
@@ -23,5 +27,5 @@ jobs:
     - name: Validate renovate config
       uses: docker://renovate/renovate
       with:
-        args: |
-          renovate-config-validator .github/renovate.json5 .github/config/renovatebot/*
+        entrypoint: bash
+        args: -c "renovate-config-validator .github/renovate.json5 .github/config/renovatebot/*"
