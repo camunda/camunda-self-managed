@@ -36,21 +36,51 @@ jobs:
       fail-fast: false
       matrix:
         versions:
+          # Camunda 8.3
           - name: Camunda 8.3
             camunda-version: "8.3"
-            compose-args: "-f docker-compose.yaml -f docker-compose-web-modeler.yaml"
+            compose-args: "-f docker-compose.yaml"
+          - name: Camunda 8.3 - Core
+            camunda-version: "8.3"
+            compose-args: "-f docker-compose-core.yaml"
+          - name: Camunda 8.3 - Web Modeler
+            camunda-version: "8.3"
+            compose-args: "-f docker-compose-web-modeler.yaml"
+          # Camunda 8.4
           - name: Camunda 8.4
             camunda-version: "8.4"
-            compose-args: "-f docker-compose.yaml -f docker-compose-web-modeler.yaml"
+            compose-args: "-f docker-compose.yaml"
+          - name: Camunda 8.4 - Core
+            camunda-version: "8.4"
+            compose-args: "-f docker-compose-core.yaml"
+          - name: Camunda 8.4 - Web Modeler
+            camunda-version: "8.4"
+            compose-args: "-f docker-compose-web-modeler.yaml"
+          # Camunda 8.5
           - name: Camunda 8.5
             camunda-version: "8.5"
-            compose-args: "-f docker-compose.yaml -f docker-compose-web-modeler.yaml"
+            compose-args: "-f docker-compose.yaml"
+          - name: Camunda 8.5 - Core
+            camunda-version: "8.5"
+            compose-args: "-f docker-compose-core.yaml"
+          - name: Camunda 8.5 - Web Modeler
+            camunda-version: "8.5"
+            compose-args: "-f docker-compose-web-modeler.yaml"
+          # Camunda 8.6
           - name: Camunda 8.6
             camunda-version: "8.6"
-            compose-args: "--profile full"
+          # Camunda Alpha
           - name: Camunda Alpha
             camunda-version: "alpha"
-            compose-args: "--profile full"
+          - name: Camunda Alpha
+            camunda-version: "alpha"
+            compose-args: "-f docker-compose.yaml"
+          - name: Camunda Alpha - Core
+            camunda-version: "alpha"
+            compose-args: "-f docker-compose-core.yaml"
+          - name: Camunda Alpha - Web Modeler
+            camunda-version: "alpha"
+            compose-args: "-f docker-compose-web-modeler.yaml"
         exclude: ${{ fromJson(needs.init.outputs.unchanged-versions) }}
     uses: ./.github/workflows/docker-compose-test-e2e-template.yaml
     secrets: inherit
