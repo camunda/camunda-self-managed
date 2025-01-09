@@ -34,16 +34,23 @@ jobs:
     name: Run
     runs-on: ubuntu-latest
     steps:
+      #
+      # Init.
+
+      - name: ℹ️ Print workflow inputs ℹ️
+        env:
+          GITHUB_CONTEXT: ${{ toJson(inputs) }}
+        run: |
+          echo "Workflow Inputs:"
+          echo "${GITHUB_CONTEXT}"
       - name: disable and stop mono-xsp4.service
         run: |
           sudo systemctl stop mono-xsp4.service || true
           sudo systemctl disable mono-xsp4.service || true
           sudo killall mono || true
           sudo killall xsp4 || true
-
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Login to Docker registries
         run: |
           # DockerHub registry.
@@ -76,12 +83,12 @@ jobs:
 
       - name: Install Playwright
         uses: ./.github/actions/install-playwright
-        if: ${{ inputs.e2e-test-enabled }}
+        if: inputs.e2e-test-enabled
         with:
           working-directory: ${{ inputs.e2e-test-directory }}
 
       - name: Run Playwright tests
-        if: ${{ inputs.e2e-test-enabled }}
+        if: inputs.e2e-test-enabled
         id: test
         working-directory: ${{ inputs.e2e-test-directory }}
         run: |
