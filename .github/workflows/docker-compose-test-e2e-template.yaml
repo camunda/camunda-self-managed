@@ -69,19 +69,17 @@ jobs:
       #
       # Docker Compose.
 
-      - name: Bring up containers dependencies
+      - name: ⭐ Bring up containers dependencies
         if: inputs.deps-compose-args
         working-directory: ${{ env.COMPOSE_WORKING_DIRECTORY }}
         run: |
           docker compose ${{ inputs.deps-compose-args }} \
             up --quiet-pull -d
-
-      - name: Bring up containers
+      - name: ⭐ Bring up containers
         working-directory: ${{ env.COMPOSE_WORKING_DIRECTORY }}
         run: |
-          docker compose ${{ inputs.compose-args }} \
+          docker compose ${{ inputs.main-compose-args }} \
             up --quiet-pull -d
-
       - name: Wait until all containers are healthy
         timeout-minutes: 5
         run: |
@@ -99,14 +97,12 @@ jobs:
         if: inputs.e2e-test-enabled
         with:
           working-directory: ${{ inputs.e2e-test-directory }}
-
       - name: Run Playwright tests
         if: inputs.e2e-test-enabled
         id: test
         working-directory: ${{ inputs.e2e-test-directory }}
         run: |
           npx playwright test ${{ inputs.e2e-test-args }}
-
       - name: Upload Playwright reports
         if: always() && steps.test.conclusion != 'skipped'
         uses: actions/upload-artifact@v4
