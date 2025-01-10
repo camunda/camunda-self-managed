@@ -37,11 +37,11 @@ jobs:
       matrix:
         versions:
           # Camunda 8.3
-          - name: ⭐ Camunda 8.3 ⭐
+          - name: Camunda 8.3 ⭐
             camunda-version: "8.3"
             main-compose-args: "-f docker-compose.yaml"
             e2e-test-enabled: false
-          - name: Camunda 8.3 - Core
+          - name: Camunda 8.3 - Identity Disabled
             camunda-version: "8.3"
             main-compose-args: "-f docker-compose-core.yaml"
             e2e-test-enabled: false
@@ -55,7 +55,7 @@ jobs:
             camunda-version: "8.4"
             main-compose-args: "-f docker-compose.yaml"
             e2e-test-enabled: false
-          - name: Camunda 8.4 - Core
+          - name: Camunda 8.4 - Identity Disabled
             camunda-version: "8.4"
             main-compose-args: "-f docker-compose-core.yaml"
             e2e-test-enabled: false
@@ -69,7 +69,7 @@ jobs:
             camunda-version: "8.5"
             main-compose-args: "-f docker-compose.yaml"
             e2e-test-enabled: false
-          - name: Camunda 8.5 - Core
+          - name: Camunda 8.5 - Identity Disabled
             camunda-version: "8.5"
             main-compose-args: "-f docker-compose-core.yaml"
             e2e-test-enabled: false
@@ -81,9 +81,11 @@ jobs:
           # Camunda 8.6
           - name: Camunda 8.6 ⭐
             camunda-version: "8.6"
-          - name: Camunda 8.6 - Core
+            e2e-test-enabled: true
+          - name: Camunda 8.6 - Identity Disabled
             camunda-version: "8.6"
             main-compose-args: "-f docker-compose-core.yaml"
+            e2e-test-enabled: false
           - name: Camunda 8.6 - Web Modeler Standalone
             camunda-version: "8.6"
             deps-compose-args: "--profile identity"
@@ -93,9 +95,11 @@ jobs:
           - name: Camunda Alpha ⭐
             camunda-version: "alpha"
             main-compose-args: "-f docker-compose.yaml"
-          - name: Camunda Alpha - Core
+            e2e-test-enabled: true
+          - name: Camunda Alpha - Identity Disabled
             camunda-version: "alpha"
             main-compose-args: "-f docker-compose-core.yaml"
+            e2e-test-enabled: false
           - name: Camunda Alpha - Web Modeler Standalone
             camunda-version: "alpha"
             deps-compose-args: "--profile identity"
