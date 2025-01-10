@@ -10,7 +10,7 @@ on:
       deps-compose-args:
         description: Arguments supplied to Docker Compose dependencies
         type: string
-      compose-args:
+      main-compose-args:
         description: Arguments supplied to Docker Compose
         required: true
         type: string

@@ -39,64 +39,65 @@ jobs:
           # Camunda 8.3
           - name: ⭐ Camunda 8.3 ⭐
             camunda-version: "8.3"
-            compose-args: "-f docker-compose.yaml"
+            main-compose-args: "-f docker-compose.yaml"
             e2e-test-enabled: false
           - name: Camunda 8.3 - Core
             camunda-version: "8.3"
-            compose-args: "-f docker-compose-core.yaml"
+            main-compose-args: "-f docker-compose-core.yaml"
             e2e-test-enabled: false
           - name: Camunda 8.3 - Web Modeler
             camunda-version: "8.3"
-            compose-args: "-f docker-compose-web-modeler.yaml"
+            main-compose-args: "-f docker-compose-web-modeler.yaml"
             e2e-test-enabled: false
           # Camunda 8.4
           - name: Camunda 8.4 ⭐
             camunda-version: "8.4"
-            compose-args: "-f docker-compose.yaml"
+            main-compose-args: "-f docker-compose.yaml"
             e2e-test-enabled: false
           - name: Camunda 8.4 - Core
             camunda-version: "8.4"
-            compose-args: "-f docker-compose-core.yaml"
+            main-compose-args: "-f docker-compose-core.yaml"
             e2e-test-enabled: false
           - name: Camunda 8.4 - Web Modeler
             camunda-version: "8.4"
-            compose-args: "-f docker-compose-web-modeler.yaml"
+            main-compose-args: "-f docker-compose-web-modeler.yaml"
             e2e-test-enabled: false
           # Camunda 8.5
           - name: Camunda 8.5 ⭐
             camunda-version: "8.5"
-            compose-args: "-f docker-compose.yaml"
+            main-compose-args: "-f docker-compose.yaml"
             e2e-test-enabled: false
           - name: Camunda 8.5 - Core
             camunda-version: "8.5"
-            compose-args: "-f docker-compose-core.yaml"
+            main-compose-args: "-f docker-compose-core.yaml"
             e2e-test-enabled: false
           - name: Camunda 8.5 - Web Modeler
             camunda-version: "8.5"
-            compose-args: "-f docker-compose.yaml -f docker-compose-web-modeler.yaml"
+            deps-compose-args: "--profile identity"
+            main-compose-args: "docker-compose-web-modeler.yaml"
             e2e-test-enabled: false
           # Camunda 8.6
           - name: Camunda 8.6 ⭐
             camunda-version: "8.6"
           - name: Camunda 8.6 - Core
             camunda-version: "8.6"
-            compose-args: "-f docker-compose-core.yaml"
+            main-compose-args: "-f docker-compose-core.yaml"
           - name: Camunda 8.6 - Web Modeler
             camunda-version: "8.6"
-            deps-compose-args: "--profile identity --profile orchestration"
-            compose-args: "-f docker-compose-web-modeler.yaml"
+            deps-compose-args: "--profile identity"
+            main-compose-args: "-f docker-compose-web-modeler.yaml"
             e2e-test-enabled: false
           # Camunda Alpha
           - name: Camunda Alpha ⭐
             camunda-version: "alpha"
-            compose-args: "-f docker-compose.yaml"
+            main-compose-args: "-f docker-compose.yaml"
           - name: Camunda Alpha - Core
             camunda-version: "alpha"
-            compose-args: "-f docker-compose-core.yaml"
+            main-compose-args: "-f docker-compose-core.yaml"
           - name: Camunda Alpha - Web Modeler
             camunda-version: "alpha"
-            deps-compose-args: "--profile identity --profile orchestration"
-            compose-args: "-f docker-compose-web-modeler.yaml"
+            deps-compose-args: "--profile identity"
+            main-compose-args: "-f docker-compose-web-modeler.yaml"
             e2e-test-enabled: false
         exclude: ${{ fromJson(needs.init.outputs.unchanged-versions) }}
     uses: ./.github/workflows/docker-compose-test-e2e-template.yaml
@@ -104,5 +105,5 @@ jobs:
     with:
       camunda-version: ${{ matrix.versions.camunda-version }}
       deps-compose-args: ${{ matrix.versions.deps-compose-args }}
-      compose-args: ${{ matrix.versions.compose-args }}
+      main-compose-args: ${{ matrix.versions.compose-args }}
       e2e-test-enabled: ${{ matrix.versions.e2e-test-enabled }}
