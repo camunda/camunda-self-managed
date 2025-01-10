@@ -21,8 +21,12 @@ services:
       POSTGRES_PASSWORD: modeler-db-password
     networks:
       - modeler
+      - camunda-platform
     volumes:
       - postgres-web:/var/lib/postgresql/data
+    profiles:
+      - ''
+      - web-modeler-standalone
 
   modeler-websockets:
     container_name: modeler-websockets
@@ -42,6 +46,10 @@ services:
       PUSHER_APP_SECRET: modeler-app-secret
     networks:
       - modeler
+      - camunda-platform
+    profiles:
+      - ''
+      - web-modeler-standalone
 
   mailpit:
     # If you want to use your own SMTP server, you can remove this container
@@ -57,6 +65,10 @@ services:
       interval: 30s
     networks:
       - modeler
+      - camunda-platform
+    profiles:
+      - ''
+      - web-modeler-standalone
 
   # Modeler containers
   modeler-restapi:
@@ -94,8 +106,11 @@ services:
       RESTAPI_MAIL_ENABLE_TLS: "false"
       RESTAPI_MAIL_FROM_ADDRESS: "noreply@example.com"
     networks:
-    - modeler
-    - camunda-platform
+      - modeler
+      - camunda-platform
+    profiles:
+      - ''
+      - web-modeler-standalone
 
   modeler-webapp:
     container_name: modeler-webapp
@@ -133,6 +148,9 @@ services:
     networks:
       - modeler
       - camunda-platform
+    profiles:
+      - ''
+      - web-modeler-standalone
 
 networks:
   camunda-platform:
