@@ -7,6 +7,9 @@ on:
         description: Camunda minor version in format x.y
         required: true
         type: string
+      deps-compose-args:
+        description: Arguments supplied to Docker Compose dependencies
+        type: string
       compose-args:
         description: Arguments supplied to Docker Compose
         required: true
@@ -43,6 +46,9 @@ jobs:
         run: |
           echo "Workflow Inputs:"
           echo "${GITHUB_CONTEXT}"
+      - name: ℹ️ Print Docker Compose version ℹ️
+        run: |
+          docker compose version
       - name: disable and stop mono-xsp4.service
         run: |
           sudo systemctl stop mono-xsp4.service || true
@@ -62,6 +68,13 @@ jobs:
 
       #
       # Docker Compose.
+
+      - name: Bring up containers dependencies
+        if: inputs.deps-compose-args
+        working-directory: ${{ env.COMPOSE_WORKING_DIRECTORY }}
+        run: |
+          docker compose ${{ inputs.deps-compose-args }} \
+            up --quiet-pull -d
 
       - name: Bring up containers
         working-directory: ${{ env.COMPOSE_WORKING_DIRECTORY }}

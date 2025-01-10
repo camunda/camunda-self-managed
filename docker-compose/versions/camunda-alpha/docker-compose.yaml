@@ -34,7 +34,7 @@ services:
       - "JAVA_TOOL_OPTIONS=-Xms512m -Xmx512m"
     restart: always
     healthcheck:
-      test: [ "CMD-SHELL", "timeout 10s bash -c ':> /dev/tcp/127.0.0.1/9600' || exit 1" ]
+      test: ["CMD-SHELL", "timeout 10s bash -c ':> /dev/tcp/127.0.0.1/9600' || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 5
@@ -46,6 +46,9 @@ services:
     depends_on:
       - elasticsearch
       - identity
+    profiles:
+      - ''
+      - orchestration
 
   operate: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#operate
     image: camunda/operate:${CAMUNDA_PLATFORM_VERSION}
@@ -77,7 +80,7 @@ services:
       - management.endpoint.health.probes.enabled=true
       - ZEEBE_CLIENT_CONFIG_PATH=/tmp/zeebe_auth_cache
     healthcheck:
-      test: [ "CMD-SHELL", "wget -O - -q 'http://localhost:9600/actuator/health/readiness'" ]
+      test: ["CMD-SHELL", "wget -O - -q 'http://localhost:9600/actuator/health/readiness'"]
       interval: 30s
       timeout: 1s
       retries: 5
@@ -90,6 +93,9 @@ services:
       - zeebe
       - identity
       - elasticsearch
+    profiles:
+      - ''
+      - orchestration
 
   tasklist: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#tasklist
     image: camunda/tasklist:${CAMUNDA_PLATFORM_VERSION}
@@ -122,7 +128,7 @@ services:
       - management.endpoints.web.exposure.include=health
       - management.endpoint.health.probes.enabled=true
     healthcheck:
-      test: [ "CMD-SHELL", "wget -O - -q 'http://localhost:9600/actuator/health/readiness'" ]
+      test: ["CMD-SHELL", "wget -O - -q 'http://localhost:9600/actuator/health/readiness'"]
       interval: 30s
       timeout: 1s
       retries: 5
@@ -138,6 +144,9 @@ services:
         condition: service_healthy
       identity:
         condition: service_healthy
+    profiles:
+      - ''
+      - orchestration
 
   connectors: # https://docs.camunda.io/docs/components/integration-framework/connectors/out-of-the-box-connectors/available-connectors-overview/
     image: camunda/connectors-bundle:${CAMUNDA_CONNECTORS_VERSION}
@@ -163,7 +172,7 @@ services:
       - management.endpoint.health.probes.enabled=true
     env_file: connector-secrets.txt
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:8080/actuator/health/readiness" ]
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health/readiness"]
       interval: 30s
       timeout: 1s
       retries: 5
@@ -174,6 +183,9 @@ services:
       - zeebe
       - operate
       - identity
+    profiles:
+      - ''
+      - orchestration
 
   optimize: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#optimize
     image: camunda/optimize:${CAMUNDA_OPTIMIZE_VERSION}
@@ -198,7 +210,7 @@ services:
       - management.endpoints.web.exposure.include=health
       - management.endpoint.health.probes.enabled=true
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:8090/api/readyz" ]
+      test: ["CMD-SHELL", "curl -f http://localhost:8090/api/readyz"]
       interval: 30s
       timeout: 1s
       retries: 5
@@ -211,6 +223,9 @@ services:
     depends_on:
       - identity
       - elasticsearch
+    profiles:
+      - ''
+      - orchestration
 
   identity: # https://docs.camunda.io/docs/self-managed/platform-deployment/docker/#identity
     container_name: identity
@@ -269,7 +284,7 @@ services:
       MULTITENANCY_ENABLED: ${MULTI_TENANCY_ENABLED}
       RESOURCE_PERMISSIONS_ENABLED: ${RESOURCE_AUTHORIZATIONS_ENABLED}
     healthcheck:
-      test: [ "CMD", "wget", "-q", "--tries=1", "--spider", "http://localhost:8082/actuator/health" ]
+      test: ["CMD", "wget", "-q", "--tries=1", "--spider", "http://localhost:8082/actuator/health"]
       interval: 5s
       timeout: 15s
       retries: 30
@@ -283,6 +298,9 @@ services:
     depends_on:
       keycloak:
         condition: service_healthy
+    profiles:
+      - ''
+      - identity
 
   postgres: # https://hub.docker.com/_/postgres
     container_name: postgres
@@ -293,7 +311,7 @@ services:
       POSTGRES_PASSWORD: "#3]O?4RGj)DE7Z!9SA5"
     restart: on-failure
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -301,6 +319,9 @@ services:
       - postgres:/var/lib/postgresql/data
     networks:
       - identity-network
+    profiles:
+      - ''
+      - identity
 
   keycloak: # https://hub.docker.com/r/bitnami/keycloak
     container_name: keycloak
@@ -328,6 +349,9 @@ services:
       - identity-network
     depends_on:
       - postgres
+    profiles:
+      - ''
+      - identity
 
   elasticsearch: # https://hub.docker.com/_/elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
@@ -348,7 +372,7 @@ services:
         hard: -1
     restart: always
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:9200/_cat/health | grep -q green" ]
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cat/health | grep -q green"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -356,6 +380,9 @@ services:
       - elastic:/usr/share/elasticsearch/data
     networks:
       - camunda-platform
+    profiles:
+      - ''
+      - orchestration
 
   web-modeler-db:
     container_name: web-modeler-db
@@ -373,6 +400,9 @@ services:
       - web-modeler
     volumes:
       - postgres-web:/var/lib/postgresql/data
+    profiles:
+      - ''
+      - web-modeler
 
   mailpit:
     # If you want to use your own SMTP server, you can remove this container
@@ -388,6 +418,9 @@ services:
       interval: 30s
     networks:
       - web-modeler
+    profiles:
+      - ''
+      - web-modeler
 
   web-modeler-restapi:
     container_name: web-modeler-restapi
@@ -401,7 +434,7 @@ services:
       identity:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8091/health/readiness" ]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8091/health/readiness"]
       interval: 5s
       timeout: 15s
       retries: 30
@@ -438,6 +471,9 @@ services:
     networks:
       - web-modeler
       - camunda-platform
+    profiles:
+      - ''
+      - web-modeler
 
   web-modeler-webapp:
     container_name: web-modeler-webapp
@@ -448,7 +484,7 @@ services:
       web-modeler-restapi:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8071/health/readiness" ]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8071/health/readiness"]
       interval: 5s
       timeout: 15s
       retries: 30
@@ -475,6 +511,9 @@ services:
     networks:
       - web-modeler
       - camunda-platform
+    profiles:
+      - ''
+      - web-modeler
 
   web-modeler-websockets:
     container_name: web-modeler-websockets
@@ -482,7 +521,7 @@ services:
     ports:
       - "8060:8060"
     healthcheck:
-      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8060/up" ]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8060/up"]
       interval: 5s
       timeout: 15s
       retries: 30
@@ -493,6 +532,9 @@ services:
       PUSHER_APP_KEY: web-modeler-app-key
       PUSHER_APP_SECRET: web-modeler-app-secret
     networks:
+      - web-modeler
+    profiles:
+      - ''
       - web-modeler
 
   kibana:

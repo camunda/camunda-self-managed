@@ -23,6 +23,9 @@ services:
       - modeler
     volumes:
       - postgres-web:/var/lib/postgresql/data
+    profiles:
+      - ''
+      - web-modeler-standalone
 
   modeler-websockets:
     container_name: modeler-websockets
@@ -30,7 +33,7 @@ services:
     ports:
       - "8060:8060"
     healthcheck:
-      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8060/up" ]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8060/up"]
       interval: 5s
       timeout: 15s
       retries: 30
@@ -42,12 +45,15 @@ services:
       PUSHER_APP_SECRET: modeler-app-secret
     networks:
       - modeler
+    profiles:
+      - ''
+      - web-modeler-standalone
 
-  mailpit:
+  modeler-mailpit:
     # If you want to use your own SMTP server, you can remove this container
     # and configure RESTAPI_MAIL_HOST, RESTAPI_MAIL_PORT, REST_API_MAIL_USER,
     # REST_API_MAIL_PASSWORD and RESTAPI_MAIL_ENABLE_TLS in modeler-restapi
-    container_name: mailpit
+    container_name: modeler-mailpit
     image: axllent/mailpit:${MAILPIT_VERSION}
     ports:
       - "1025:1025"
@@ -57,6 +63,9 @@ services:
       interval: 30s
     networks:
       - modeler
+    profiles:
+      - ''
+      - web-modeler-standalone
 
   # Modeler containers
   modeler-restapi:
@@ -66,10 +75,10 @@ services:
     depends_on:
       modeler-db:
         condition: service_healthy
-      mailpit:
+      modeler-mailpit:
         condition: service_started
     healthcheck:
-      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8091/health/readiness" ]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8091/health/readiness"]
       interval: 5s
       timeout: 15s
       retries: 30
@@ -89,13 +98,16 @@ services:
       RESTAPI_OAUTH2_TOKEN_ISSUER: http://${KEYCLOAK_HOST}:18080/auth/realms/camunda-platform
       RESTAPI_OAUTH2_TOKEN_ISSUER_BACKEND_URL: http://keycloak:18080/auth/realms/camunda-platform
       RESTAPI_SERVER_URL: http://localhost:8070
-      RESTAPI_MAIL_HOST: mailpit
+      RESTAPI_MAIL_HOST: modeler-mailpit
       RESTAPI_MAIL_PORT: 1025
       RESTAPI_MAIL_ENABLE_TLS: "false"
       RESTAPI_MAIL_FROM_ADDRESS: "noreply@example.com"
     networks:
-    - modeler
-    - camunda-platform
+      - modeler
+      - camunda-platform
+    profiles:
+      - ''
+      - web-modeler-standalone
 
   modeler-webapp:
     container_name: modeler-webapp
@@ -106,7 +118,7 @@ services:
       modeler-restapi:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8071/health/readiness" ]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8071/health/readiness"]
       interval: 5s
       timeout: 15s
       retries: 30
@@ -133,6 +145,9 @@ services:
     networks:
       - modeler
       - camunda-platform
+    profiles:
+      - ''
+      - web-modeler-standalone
 
 networks:
   camunda-platform:
