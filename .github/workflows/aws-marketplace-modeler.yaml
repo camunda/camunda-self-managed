@@ -32,16 +32,16 @@ jobs:
         uses: ./.github/actions/aws-marketplace-ecr-mirror
         with:
           from: registry.camunda.cloud/web-modeler-ee/modeler-restapi:${{ inputs.imageTag }}
-          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/modeler-restapi:${{ inputs.imageTag }}
+          to: ${{ secrets.DISTRO_CI_AWS_MPLACE_BASE_URL }}/camunda/camunda8/modeler-restapi:${{ inputs.imageTag }}
 
       - name: web modeler webapp
         uses: ./.github/actions/aws-marketplace-ecr-mirror
         with:
           from: registry.camunda.cloud/web-modeler-ee/modeler-webapp:${{ inputs.imageTag }}
-          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/modeler-webapp:${{ inputs.imageTag }}
+          to: ${{ secrets.DISTRO_CI_AWS_MPLACE_BASE_URL }}/camunda/camunda8/modeler-webapp:${{ inputs.imageTag }}
 
       - name: web modeler websockets
         uses: ./.github/actions/aws-marketplace-ecr-mirror
         with:
           from: registry.camunda.cloud/web-modeler-ee/modeler-websockets:${{ inputs.imageTag }}
-          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/modeler-websockets:${{ inputs.imageTag }}
+          to: ${{ secrets.DISTRO_CI_AWS_MPLACE_BASE_URL }}/camunda/camunda8/modeler-websockets:${{ inputs.imageTag }}

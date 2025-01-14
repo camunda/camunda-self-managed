@@ -12,5 +12,5 @@ runs:
         role-to-assume: ${{ inputs.aws-role-arn }}
         aws-region: ${{ inputs.aws-region }}
     - run: |
-        aws ecr get-login-password --region ${{ inputs.aws-region }} | docker login --username AWS --password-stdin $MARKETPLACE_BASE_URL/camunda
+        aws ecr get-login-password --region ${{ inputs.aws-region }} | docker login --username AWS --password-stdin ${{ secrets.DISTRO_CI_AWS_MPLACE_BASE_URL }}/camunda
       shell: bash

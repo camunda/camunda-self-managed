@@ -26,4 +26,4 @@ jobs:
         uses: ./.github/actions/aws-marketplace-ecr-mirror
         with:
           from: camunda/connectors-bundle:${{ inputs.imageTag }}
-          to: ${{ env.MARKETPLACE_BASE_URL }}/camunda/camunda8/connectors-bundle:${{ inputs.imageTag }}
+          to: ${{ secrets.DISTRO_CI_AWS_MPLACE_BASE_URL }}/camunda/camunda8/connectors-bundle:${{ inputs.imageTag }}

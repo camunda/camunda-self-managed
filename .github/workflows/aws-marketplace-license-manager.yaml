@@ -23,11 +23,11 @@ jobs:
           aws-region: "us-east-1"
 
       - name: Build the docker image
-        run: docker build -f aws-marketplace/license-manager/Dockerfile -t $MARKETPLACE_BASE_URL/camunda/camunda8/license-manager:$IMAGE_TAG license-manager
+        run: docker build -f aws-marketplace/license-manager/Dockerfile -t ${{ secrets.DISTRO_CI_AWS_MPLACE_BASE_URL }}/camunda/camunda8/license-manager:$IMAGE_TAG license-manager
         env:
           IMAGE_TAG: ${{ inputs.imageTag }}
 
       - name: Push the docker image
-        run: docker push $MARKETPLACE_BASE_URL/camunda/camunda8/license-manager:$IMAGE_TAG
+        run: docker push ${{ secrets.DISTRO_CI_AWS_MPLACE_BASE_URL }}/camunda/camunda8/license-manager:$IMAGE_TAG
         env:
           IMAGE_TAG: ${{ inputs.imageTag }}
