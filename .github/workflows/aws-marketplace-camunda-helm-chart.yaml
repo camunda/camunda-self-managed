@@ -27,7 +27,9 @@ jobs:
           aws-region: "us-east-1"
 
       - run: |
-          aws ecr get-login-password --region us-east-1 | helm registry login --username AWS --password-stdin ${{ secrets.DISTRO_CI_AWS_MPLACE_BASE_URL }}
+          aws ecr get-login-password --region us-east-1 | helm registry login --username AWS --password-stdin $MARKETPLACE_BASE_URL
+        env:
+          MARKETPLACE_BASE_URL: ${{ secrets.DISTRO_CI_AWS_MPLACE_BASE_URL }}
 
       - name: add repo
         run: helm repo add camunda "https://helm.camunda.io"
