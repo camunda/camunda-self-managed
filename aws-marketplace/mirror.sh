@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export CAMUNDA_VERSION=10.4.2
+export CAMUNDA_VERSION=10.4.7
 
 helm repo update
 
@@ -33,6 +33,7 @@ export ELASTICSEARCH_VERSION="$(cat chart_images | grep elasticsearch | sed 's/[
 export POSTGRESQL_VERSION="$(cat chart_images | grep postgresql | sed 's/[^:]*://')"
 export KEYCLOAK_VERSION="$(cat chart_images | grep keycloak | sed 's/[^:]*://')"
 export CONSOLE_VERSION="$(cat chart_images | grep console | sed 's/[^:]*://')"
+export LICENSE_MANAGER_VERSION="0.0.1"
 
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 709825985650.dkr.ecr.us-east-1.amazonaws.com
 
@@ -102,4 +103,10 @@ docker manifest inspect 709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/cam
 helm_image_exists=$?
 if [[ "$helm_image_exists" != "0" ]]; then
     gh workflow run aws-marketplace-camunda-helm-chart.yaml -f imageTag=$CAMUNDA_VERSION -f awsImageTag=$CAMUNDA_VERSION
+fi
+
+docker manifest inspect 709825985650.dkr.ecr.us-east-1.amazonaws.com/camunda/camunda8/license-manager:$LICENSE_MANAGER_VERSION > /dev/null
+license_manager_exists=$?
+if [[ "$license_manager_exists" != "0" ]]; then
+    gh workflow run aws-marketplace-license-manager.yaml -f imageTag=$LICENSE_MANAGER_VERSION -f awsImageTag=$LICENSE_MANAGER_VERSION
 fi
