@@ -1,6 +1,6 @@
 # Camunda 8 Self-Managed - Docker Compose
 
-A Docker Compose configuration to run Camunda Platform (e.g., Zeebe, Operate, Tasklist, Optimize, Identity, and Connectors Bundle).
+A Docker Compose configuration to run Camunda Platform (e.g., Zeebe, Operate, Tasklist, Optimize, Identity, Connectors Bundle, and Web Modeler).
 
 > [!CAUTION]
 >
