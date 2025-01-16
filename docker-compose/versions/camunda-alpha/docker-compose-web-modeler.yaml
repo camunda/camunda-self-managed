@@ -29,7 +29,7 @@ services:
 
   modeler-websockets:
     container_name: modeler-websockets
-    image: registry.camunda.cloud/web-modeler-ee/modeler-websockets:${CAMUNDA_WEB_MODELER_VERSION}
+    image: camunda/web-modeler-websockets:${CAMUNDA_WEB_MODELER_VERSION}
     ports:
       - "8060:8060"
     healthcheck:
@@ -70,7 +70,7 @@ services:
   # Modeler containers
   modeler-restapi:
     container_name: modeler-restapi
-    image: registry.camunda.cloud/web-modeler-ee/modeler-restapi:${CAMUNDA_WEB_MODELER_VERSION}
+    image: camunda/web-modeler-restapi:${CAMUNDA_WEB_MODELER_VERSION}
     command: /bin/sh -c "java $JAVA_OPTIONS org.springframework.boot.loader.JarLauncher"
     depends_on:
       modeler-db:
@@ -111,7 +111,7 @@ services:
 
   modeler-webapp:
     container_name: modeler-webapp
-    image: registry.camunda.cloud/web-modeler-ee/modeler-webapp:${CAMUNDA_WEB_MODELER_VERSION}
+    image: camunda/web-modeler-webapp:${CAMUNDA_WEB_MODELER_VERSION}
     ports:
       - "8070:8070"
     depends_on:
