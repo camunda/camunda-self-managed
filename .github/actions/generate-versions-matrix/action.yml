@@ -7,11 +7,14 @@ inputs:
     required: true
 
 outputs:
-  # NOTE: The logic is reversed here (get unchanged files instead of the changed ones),
-  # to avoid creating GHA skipped jobs. This twist is due to how GHA works.
+  # NOTE: To avoid GHA creating skipped matrix jobs, the logic is reversed here.
+  # So we get unchanged files instead of the changed ones. This twist is due to how GHA works.
   unchanged:
     description: JSON matrix of unchanged versions which will be used as and input for GHA workflow matrix exclude.
     value: ${{ steps.get-versions.outputs.matrix-unchanged }}
+  should-run:
+    description: JSON matrix of changed versions (used to avoid running empty matrix).
+    value: ${{ steps.get-versions.outputs.should-run }}
 
 runs:
   using: composite
@@ -27,16 +30,18 @@ runs:
       env:
         ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         UNCHANGED_VERSIONS_TMP_FILE: unchanged_versions.txt
+        CHANGED_VERSIONS_TMP_FILE: changed_versions.txt
       run: |
-        env
         echo "Setting matrix based on changed files"
         echo "Changed files:"
         printf "%s\n" ${ALL_CHANGED_FILES}
+        touch ${CHANGED_VERSIONS_TMP_FILE}
         touch ${UNCHANGED_VERSIONS_TMP_FILE}
 
         ls -d ${{ inputs.versions-path }} | while read version_dir; do
           if [[ $(echo ${ALL_CHANGED_FILES} | grep "${version_dir}") ]]; then
-            continue
+            echo "Camunda version: ${version_dir}"
+            echo "${version_dir}" >> ${CHANGED_VERSIONS_TMP_FILE};
           else
             camunda_version="$(echo ${version_dir} | rev | cut -d '-' -f 1 | rev)";
             echo "Camunda version: ${camunda_version}"
@@ -44,6 +49,10 @@ runs:
           fi
         done
         # NOTE: The keys "versions" and "camunda-version" are hard-coded and should be used in the workflow matrix.
+        # Unchanged.
         matrix_unchanged="$(cat ${UNCHANGED_VERSIONS_TMP_FILE} |
           jq -s -c -R 'split("\n") | .[:-1] | map({"versions": {"camunda-version": .}})')"
         echo "matrix-unchanged=${matrix_unchanged}" | tee -a $GITHUB_OUTPUT
+        # Changed.
+        should_run="$([[ $(stat --printf="%s" ${CHANGED_VERSIONS_TMP_FILE}) -gt 0 ]] && echo "true" || echo "false")"
+        echo "should-run=${should_run}" | tee -a $GITHUB_OUTPUT

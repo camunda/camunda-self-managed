@@ -30,11 +30,13 @@ jobs:
         with:
           versions-path: "docker-compose/versions/camunda-*"
     outputs:
+      should-run: ${{ steps.generate-versions-matrix.outputs.should-run }}
       unchanged-versions: ${{ steps.generate-versions-matrix.outputs.unchanged }}
 
   exec:
     needs: [init]
-    name: ${{ matrix.versions.name }}
+    if: ${{ needs.init.outputs.should-run == 'true' }}
+    name: ${{ matrix.versions.name || 'Skipped' }}
     strategy:
       fail-fast: false
       matrix:
