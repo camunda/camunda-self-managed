@@ -3,110 +3,54 @@
 name: "Docker Compose | Release"
 
 on:
-  workflow_dispatch:
-    inputs:
-      camunda-version:
-        description: Camunda minor version in format x.y
-        required: true
-        type: string
-      release-tag:
-        description: |
-          The tag name of the released Docker Compose.
-          By Default, it will use the platform version.
-        type: string
-      git-ref:
-        description: Git ref that will be used to release.
-        default: main
-        type: string
+  push:
+    branches:
+      - main
+    paths:
+      - docker-compose/versions/**
+  pull_request:
+    paths:
+      - .github/workflows/docker-compose-release-template.yaml
+      - .github/workflows/docker-compose-release.yaml
+      - docker-compose/versions/**
 
-env:
-  GIT_REF: ${{ inputs.git-ref }}
-  DOCKER_COMPOSE_NAME: docker-compose-${{ inputs.camunda-version }}
-  DOCKER_COMPOSE_WORKING_DIRECTORY: docker-compose/versions/camunda-${{ inputs.camunda-version }}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
-  release:
-    name: Release
+  init:
+    name: Generate version matrix
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: write
     steps:
-      #
-      # Init.
-      - name: ℹ️ Print workflow inputs ℹ️
-        env:
-          GITHUB_CONTEXT: ${{ toJson(inputs) }}
-        run: |
-          echo "Workflow Inputs:"
-          echo "${GITHUB_CONTEXT}"
-      - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Generate versions
+        id: generate-versions-matrix
+        uses: ./.github/actions/generate-versions-matrix
         with:
-          ref: ${{ inputs.git-ref }}
+          versions-path: "docker-compose/versions/camunda-*"
+    outputs:
+      unchanged-versions: ${{ steps.generate-versions-matrix.outputs.unchanged }}
 
-      #
-      # Artifacts.
-      - name: Create release artifact
-        run: |
-          tar -czf ${{ env.DOCKER_COMPOSE_NAME }}.tgz \
-            -C ${{ env.DOCKER_COMPOSE_WORKING_DIRECTORY }} .
-
-      #
-      # Security signature.
-      - name: Install Cosign CLI
-        uses: sigstore/cosign-installer@4959ce089c160fddf62f7b42464195ba1a56d382 # v3.6.0
-      - name: Sign Helm chart with Cosign
-        run: |
-          cosign sign-blob -y ${{ env.DOCKER_COMPOSE_NAME }}.tgz \
-            --bundle ${{ env.DOCKER_COMPOSE_NAME }}.cosign.bundle
-      - name: Verify signed Helm chart with Cosign
-        run: |
-          cosign verify-blob ${{ env.DOCKER_COMPOSE_NAME }}.tgz \
-            --bundle ${{ env.DOCKER_COMPOSE_NAME }}.cosign.bundle \
-            --certificate-identity "https://github.com/${{ github.repository }}/.github/workflows/docker-compose-release.yaml@refs/heads/${{ env.GIT_REF }}" \
-            --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
-
-      #
-      # Release
-      # TODO: Use gomplate to generate the Docker Compose release notes.
-      - name: Create release notes
-        run: |
-          grep _VERSION ${{ env.DOCKER_COMPOSE_WORKING_DIRECTORY }}/.env > VERSIONS.txt
-          cat << EOF > RELEASE-NOTES.md
-          $(cat ${{ env.DOCKER_COMPOSE_WORKING_DIRECTORY }}/README.md) 
-          ## Versions
-          $(printf -- "- %s\n" $(cat VERSIONS.txt))
-          ## Verification
-          To verify the integrity of the artifact using [Cosign](https://docs.sigstore.dev/signing/quickstart/):
-          \`\`\`shell
-          # Download Docker Compose artifact.
-          curl -LO https://github.com/${{ github.repository }}/releases/download/${{ env.DOCKER_COMPOSE_NAME }}/${{ env.DOCKER_COMPOSE_NAME }}.tgz
-          # Download Docker Compose Cosign bundle.
-          curl -LO https://github.com/${{ github.repository }}/releases/download/${{ env.DOCKER_COMPOSE_NAME }}/${{ env.DOCKER_COMPOSE_NAME }}.cosign.bundle
-          # Verify with cosign.
-          cosign verify-blob ${{ env.DOCKER_COMPOSE_NAME }}.tgz \\
-            --bundle ${{ env.DOCKER_COMPOSE_NAME }}.cosign.bundle \\
-            --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \\
-            --certificate-identity "https://github.com/${{ github.repository }}/.github/workflows/docker-compose-release.yaml@refs/heads/${{ env.GIT_REF }}"
-          \`\`\`
-          ## Notes
-          - **Release strategy:** Camunda Docker Compose release is a rolling release. Hence, it's always 1 artifact per Camunda minor version.
-          - **Latest update:** $(date)
-          EOF
-      - name: Create git tag
-        run: |
-          git tag ${{ env.DOCKER_COMPOSE_NAME }}
-      - name: Release on GitHub
-        id: gh-release
-        uses: softprops/action-gh-release@c95fe1489396fe8a9eb87c0abf8aa5b2ef267fda # v2
-        with:
-          name: ${{ env.DOCKER_COMPOSE_NAME }}
-          tag_name: ${{ env.DOCKER_COMPOSE_NAME }}
-          body_path: RELEASE-NOTES.md
-          files: |
-            ${{ env.DOCKER_COMPOSE_NAME }}.tgz
-            ${{ env.DOCKER_COMPOSE_NAME }}.cosign.bundle
-      - name: Add release URL to workflow summary
-        run: |
-          echo "⭐ Release URL: ${{steps.gh-release.outputs.url}}" >> $GITHUB_STEP_SUMMARY
+  exec:
+    needs: [init]
+    name: ${{ matrix.versions.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        versions:
+          - name: Camunda 8.3
+            camunda-version: 8.3
+          - name: Camunda 8.4
+            camunda-version: 8.5
+          - name: Camunda 8.5
+            camunda-version: 8.5
+          - name: Camunda 8.6
+            camunda-version: 8.6
+          - name: Camunda Alpha
+            camunda-version: alpha
+        exclude: ${{ fromJson(needs.init.outputs.unchanged-versions) }}
+    uses: ./.github/workflows/docker-compose-release-template.yaml
+    secrets: inherit
+    with:
+      camunda-version: ${{ matrix.versions.camunda-version }}

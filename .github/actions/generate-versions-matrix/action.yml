@@ -7,6 +7,8 @@ inputs:
     required: true
 
 outputs:
+  # NOTE: The logic is reversed here (get unchanged files instead of the changed ones),
+  # to avoid creating GHA skipped jobs. This twist is due to how GHA works.
   unchanged:
     description: JSON matrix of unchanged versions which will be used as and input for GHA workflow matrix exclude.
     value: ${{ steps.get-versions.outputs.matrix-unchanged }}
@@ -26,6 +28,7 @@ runs:
         ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         UNCHANGED_VERSIONS_TMP_FILE: unchanged_versions.txt
       run: |
+        env
         echo "Setting matrix based on changed files"
         echo "Changed files:"
         printf "%s\n" ${ALL_CHANGED_FILES}
