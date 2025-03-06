@@ -104,6 +104,7 @@ services:
       - CAMUNDA_OPERATE_CLIENT_URL=http://operate:8080
       - CAMUNDA_OPERATE_CLIENT_USERNAME=demo
       - CAMUNDA_OPERATE_CLIENT_PASSWORD=demo
+      - CAMUNDA_OPERATE_CLIENT_PROFILE=simple
       - management.endpoints.web.exposure.include=health
       - management.endpoint.health.probes.enabled=true
     healthcheck:
