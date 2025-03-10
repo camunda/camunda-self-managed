@@ -101,7 +101,6 @@ jobs:
             e2e-test-enabled: false
           - name: Camunda Alpha - Web Modeler Standalone
             camunda-version: "alpha"
-            deps-compose-args: "--profile identity"
             main-compose-args: "-f docker-compose-web-modeler.yaml"
             e2e-test-enabled: false
         exclude: ${{ fromJson(needs.init.outputs.unchanged-versions) }}
